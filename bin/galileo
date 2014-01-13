@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "galileo"
+
+Galileo.new(ARGV.last)
