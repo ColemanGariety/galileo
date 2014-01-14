@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require "galileo/version"
 require "octokit"
 require "terminal-table/lib/terminal-table.rb"
@@ -19,12 +20,14 @@ class Galileo
     end
 
     puts "" # \n
-    puts "Searching the stars..."
+    puts "🌠  Searching the stars..."
 
     Octokit.configure do |client|
       client.netrc = true
       client.auto_paginate = true
     end
+
+    Octokit.middleware = 
 
     Octokit.starred(Octokit.user.login).each do |repo|
       repos << [
