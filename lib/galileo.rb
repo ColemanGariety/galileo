@@ -1,51 +1,93 @@
-# -*- coding: utf-8 -*-
 require "galileo/version"
 require "octokit"
 require "terminal-table/lib/terminal-table.rb"
 require "time/time-ago-in-words"
 require "colorize"
 require "netrc"
+require "httparty"
+require "api_cache"
+require "moneta"
 
 class Galileo
   def initialize(query)
     repos = []
-    n = Netrc.read
+    config = Netrc.read
     
-    unless n["api.github.com"]
+    unless config["api.github.com"]
       puts "" # \n
       login = [(print 'GitHub Username: '), $stdin.gets.rstrip][1]
       password = [(print 'GitHub Password: '), $stdin.gets.rstrip][1]
-      n["api.github.com"] = login, password
-      n.save
+      config["api.github.com"] = login, password
+      config.save
     end
-
-    puts "" # \n
-    puts "🌠  Searching the stars..."
 
     Octokit.configure do |client|
       client.netrc = true
       client.auto_paginate = true
     end
 
-    Octokit.middleware = 
+    APICache.store = Moneta.new(:File, :dir => 'moneta')
 
-    Octokit.starred(Octokit.user.login).each do |repo|
-      repos << [
-                repo.name.yellow || '',
-                repo.description || '',
-                repo.language || '',
-                repo.owner.login || '',
-                repo.stargazers_count.to_s.blue || '0',
-                Time.parse(repo.updated_at.to_s || '').time_ago_in_words
-               ]
+    repos = APICache.get("starred", fail: [], timeout: 20, cache: 3600) do
+      repos = []
+
+      puts "" # \n
+      puts "Searching the stars..."
+
+      # GET
+      Octokit.starred(Octokit.user.login).each do |repo|
+        repos << [
+         repo.name || '',
+         repo.description || '',
+         repo.language || '',
+         repo.owner.login || '',
+         repo.stargazers_count || 0,
+         repo.updated_at
+        ]
+      end      
+
+      repos
     end
 
-    table = Terminal::Table.new
-    table.headings = ['Name', 'Description', 'Language', 'Author', 'Stars', 'Last Updated']
-    repos = repos.sort_by { |repo| -(repo[4].uncolorize.to_i) }.product([:separator]).flatten(1)[0...-1]
-    table.rows = repos[0..20]
-    table.style = { width: `/usr/bin/env tput cols`.to_i }
+    if repos.any?
+      if query
+        # Filter by the query
+        repos.select! do |repo|
+          query.downcase!
+          repo[0].downcase.include?(query) or
+          repo[1].downcase.include?(query)
+        end
 
-    puts "\n#{table}\n\n"
+        # Sort by stars
+        repos.sort_by! { |repo| -repo[4] } if query and repos
+      end
+
+      if repos.any?
+        # Formatting
+        repos.map! do |repo|
+          repo[0] = repo[0].yellow
+          repo[4] = repo[4].to_s.blue
+          repo[5] = repo[5].time_ago_in_words
+          repo[6] = "github.com/#{repo[3]}/#{repo[0]}"
+          repo
+        end
+
+        # Add separators
+        repos = repos.product([:separator]).flatten(1)[0...-1]
+
+        # Construct the table
+        table = Terminal::Table.new
+        table.headings = ['Name', 'Description', 'Language', 'Author', 'Stars', 'Last Updated', 'Link (⌘  + Click)']
+        table.rows = repos[0..20]
+        table.style = { width: `/usr/bin/env tput cols`.to_i }
+
+        # Print the table
+        puts "\n#{table}\n\n"
+      else
+        puts "\nNo results for that query.\n\n"
+      end
+    else
+      puts "\nNo results found. Have you starred any repos? Have you exceeded your rate limit?\n\n"
+    end    
   end
 end
