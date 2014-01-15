@@ -90,18 +90,18 @@ class Galileo
 
           # Language color-coating
           case repo[2]
-          when 'Clojur' then                         repo[2] = repo[2].colorize(:light_red)
-          when 'Ruby' then                           repo[2] = repo[2].red
-          when 'CSS', 'CoffeeScript', 'Python' then  repo[2] = repo[2].blue
-          when 'Perl', 'Shell', 'Objective-C' then   repo[2] = repo[2].colorize(:light_blue)
-          when 'PHP', 'C#' then                      repo[2] = repo[2].magenta
-          when 'Emacs Lisp', 'C++' then              repo[2] = repo[2].colorize(:light_magenta)
-          when 'Smalltalk' then                      repo[2] = repo[2].green
-          when 'VimL', 'Scala' then                  repo[2] = repo[2].colorize(:light_green)
-          when 'C' then                              repo[2] = repo[2].black
-          when 'Go' then                             repo[2] = repo[2].yellow
+          when 'Clojur'                         then repo[2] = repo[2].colorize(:light_red)
+          when 'Ruby'                           then repo[2] = repo[2].red
+          when 'CSS', 'CoffeeScript', 'Python'  then repo[2] = repo[2].blue
+          when 'Perl', 'Shell', 'Objective-C'   then repo[2] = repo[2].colorize(:light_blue)
+          when 'PHP', 'C#'                      then repo[2] = repo[2].magenta
+          when 'Emacs Lisp', 'C++'              then repo[2] = repo[2].colorize(:light_magenta)
+          when 'Smalltalk', 'TeX'               then repo[2] = repo[2].green
+          when 'VimL', 'Scala'                  then repo[2] = repo[2].colorize(:light_green)
+          when 'C'                              then repo[2] = repo[2].black
+          when 'Go'                             then repo[2] = repo[2].yellow
           when 'Assembly', 'Java', 'JavaScript' then repo[2] = repo[2].colorize(:light_yellow)
-          when 'Common Lisp' then                    repo[2] = repo[2].cyan
+          when 'Common Lisp'                    then repo[2] = repo[2].cyan
           end
 
           repo[4] = repo[4].to_s.blue
