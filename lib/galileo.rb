@@ -7,6 +7,7 @@ require "netrc"
 require "api_cache"
 require "moneta"
 require "tmpdir"
+require "io/console"
 
 class Galileo
   def initialize(query)
@@ -15,8 +16,8 @@ class Galileo
     
     unless config["api.github.com"]
       puts "" # \n
-      login = [(print 'GitHub Username: '), $stdin.gets.rstrip][1]
-      password = [(print 'GitHub Password: '), $stdin.gets.rstrip][1]
+      login = [(print 'GitHub Username: '), STDIN.gets.rstrip][1]
+      password = [(print 'GitHub Password: '), STDIN.noecho(&:gets).rstrip][1]
       config["api.github.com"] = login, password
       config.save
     end
