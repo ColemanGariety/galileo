@@ -55,6 +55,7 @@ img {
 }
 
 pre {
+  min-width: 267px;
   position: relative;
   top: -20px;
   margin: 0;
