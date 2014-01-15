@@ -13,8 +13,7 @@ body {
   left: 0;
   bottom: 0;
   background-color: black;
-  opacity: .66;
-  z-index: -1;
+  opacity: .7;
 }
 
 header {
@@ -22,16 +21,19 @@ header {
 }
 
 h1 {
+  position: relative;
   font-size: 3.5em;
   margin: 0;
 }
 
 h2 {
+  position: relative;
   font-size: 1.4em;
   margin: 0;
 }
 
 h3 {
+  position: relative;
   font-size: 1.1em;
   margin: 7px;
   opacity: .66;
@@ -43,15 +45,23 @@ a {
 }
 
 a:hover {
-  opacity: .75;
+  opacity: .85;
 }
 
 a:active {
-  opacity: .5;
+  opacity: .7;
 }
 
 img {
-  max-width: 800px;
+  position: relative;
+  max-width: 900px;
+}
+
+#forkme {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 10;
 }
 
 pre {
@@ -73,4 +83,8 @@ pre {
   -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .5);
      -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .5);
           box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+}
+
+#install::before {
+  content: '$ ';
 }
