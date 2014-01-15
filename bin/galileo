@@ -2,4 +2,4 @@
 
 require "galileo"
 
-Galileo.new(ARGV.join(' '))
+Galileo.new(ARGV)
