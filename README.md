@@ -1,28 +1,32 @@
 # Galileo
 
-TODO: Write a gem description
+Search your starred GitHub repos from your shell.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'galileo'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install galileo
+    gem install galileo
 
 ## Usage
 
-TODO: Write usage instructions here
+See your most recent GitHub stars:
+
+    galileo
+
+Search through the names & descriptions of the starred repos:
+
+    galileo markdown parser
+
+Filter by language:
+
+    galileo markdown parser -l javascript
+
+Refresh the repo cache from GitHub:
+
+    galileo -r
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/galileo/fork )
+1. Fork it ( http://github.com/JacksonGariety/galileo/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

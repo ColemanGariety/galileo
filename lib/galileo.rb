@@ -4,9 +4,9 @@ require "terminal-table/lib/terminal-table.rb"
 require "time/time-ago-in-words"
 require "colorize"
 require "netrc"
-require "httparty"
 require "api_cache"
 require "moneta"
+require "tmpdir"
 
 class Galileo
   def initialize(query)
@@ -26,7 +26,7 @@ class Galileo
       client.auto_paginate = true
     end
 
-    APICache.store = Moneta.new(:File, :dir => 'moneta')
+    APICache.store = Moneta.new(:File, dir: Dir.tmpdir)
 
     repos = APICache.get("starred", fail: [], timeout: 20, cache: 3600) do
       repos = []
@@ -50,16 +50,36 @@ class Galileo
     end
 
     if repos.any?
-      if query
+      if query.any?
+        languages = []
+
+        # If the language parameter if present
+        if query.index('-l')
+          languages = query.delete(query[query.index('-l') + 1]).split(',')
+          query.delete('-l')
+        end
+
         # Filter by the query
         repos.select! do |repo|
-          query.downcase!
-          repo[0].downcase.include?(query) or
-          repo[1].downcase.include?(query)
+          
+
+          # Join the arguments into a query
+          q = query.join(' ').downcase
+          repo[0].downcase.include?(q) or
+          repo[1].downcase.include?(q)
         end
 
         # Sort by stars
-        repos.sort_by! { |repo| -repo[4] } if query and repos
+        repos.sort_by! { |repo| -repo[4] } if query and repos.any?
+
+        # If languages
+        if languages.any?
+          languages.map!(&:downcase)
+          
+          repos.select! do |repo|
+            languages.include? repo[2].downcase
+          end
+        end
       end
 
       if repos.any?
@@ -86,7 +106,7 @@ class Galileo
           repo[4] = repo[4].to_s.blue
           repo[3] = repo[3].red
           repo[5] = repo[5].time_ago_in_words
-          repo[6] = "github.com/#{repo[3]}/#{repo[0]}"
+          repo[6] = "github.com/#{repo[3].uncolorize}/#{repo[0].uncolorize}".magenta
           repo
         end
 
@@ -107,5 +127,10 @@ class Galileo
     else
       puts "\nNo results found. Have you starred any repos? Have you exceeded your rate limit?\n\n"
     end    
+  end
+
+  def self.refresh
+    FileUtils.rm_rf(Dir.tmpdir)
+    self.new([])
   end
 end
