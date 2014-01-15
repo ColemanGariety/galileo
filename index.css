@@ -1,0 +1,75 @@
+body {
+  font-family: Helvetica;
+  text-align: center;
+  background-image: url(stars.jpg);
+  background-size: cover;
+  color: white;
+}
+
+#shade {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: black;
+  opacity: .66;
+  z-index: -1;
+}
+
+header {
+  margin: 20px;
+}
+
+h1 {
+  font-size: 3.5em;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.4em;
+  margin: 0;
+}
+
+h3 {
+  font-size: 1.1em;
+  margin: 7px;
+  opacity: .66;
+  font-style: italic;
+}
+
+a {
+  color: #FFF;
+}
+
+a:hover {
+  opacity: .75;
+}
+
+a:active {
+  opacity: .5;
+}
+
+img {
+  max-width: 850px;
+}
+
+pre {
+  position: relative;
+  top: -20px;
+  margin: 0;
+  text-align: left;
+  display: inline-block;
+  font-size: 1.5em;
+  background: rgba(0, 0, 0, .5);
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  padding: 15px;
+  line-height: 1.5em;
+  text-shadow: 0 0 6px rgba(255, 255, 255, .66);
+  border: 1px solid black;
+  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+     -moz-box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+          box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+}

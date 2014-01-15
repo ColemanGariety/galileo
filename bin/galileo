@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-
-require "galileo"
-
-if ARGV[0] == '-r' and ARGV.length == 1
-  Galileo.refresh
-else
-  Galileo.new(ARGV)
-end
