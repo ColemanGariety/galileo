@@ -36,7 +36,7 @@ class Galileo
       puts "Searching the stars..."
 
       # GET
-      Octokit.starred(Octokit.user.login).each do |repo|
+      Octokit.starred(Octokit.user.login).concat(Octokit.repos(Octokit.user.login)).each do |repo|
         repos << [
          repo.name || '',
          repo.description || '',
@@ -45,9 +45,9 @@ class Galileo
          repo.stargazers_count || '',
          repo.updated_at || ''
         ]
-      end      
+      end
 
-      repos
+      repos.uniq
     end
 
     if repos.any?
