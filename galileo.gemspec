@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "netrc"
   spec.add_runtime_dependency "api_cache"
   spec.add_runtime_dependency "moneta"
+  spec.add_runtime_dependency "command_line_reporter"
   
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"

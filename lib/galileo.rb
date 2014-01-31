@@ -8,6 +8,32 @@ require "api_cache"
 require "moneta"
 require "tmpdir"
 require "io/console"
+require 'command_line_reporter'
+
+class Table
+  include CommandLineReporter
+
+  def initialize(repos)
+    table(:border => true) do
+      row do
+       column('Name', :width => 20)
+       column('Description', :width => 30, :align => 'right', :padding => 5)
+       column('Language', :width => 15)
+       column('Author', :width => 15)
+       column('Stars', :width => 15)
+       column('Last Updated', :width => 15)
+       column(ENV['_system_name'] == 'OSX' ? 'Link (⌘  + Click)' : 'Link', :width => 20)
+     end
+      repos.each do |repo|
+        row do
+          repo.each do |data|
+            column(data)
+          end
+        end
+      end
+   end
+  end
+end
 
 class Galileo
   def initialize(query)
@@ -15,28 +41,34 @@ class Galileo
     config = Netrc.read
     
     unless config["api.github.com"]
-      puts "" # \n
+      puts # \n
       login = [(print 'GitHub Username: '), STDIN.gets.rstrip][1]
       password = [(print 'GitHub Password: '), STDIN.noecho(&:gets).rstrip][1]
+      puts # \n
       config["api.github.com"] = login, password
       config.save
     end
 
-    Octokit.configure do |client|
-      client.netrc = true
-      client.auto_paginate = true
-    end
+    client = Octokit::Client.new netrc: true, auto_paginate: true
+
+    # 2FA (help?)
+    # user = begin
+    #          client.user
+    #        rescue Octokit::OneTimePasswordRequired
+    #          otp = [(print 'OTP: '), STDIN.noecho(&:gets).rstrip][1]
+    #          client.create_authorization scopes: ['user'], headers: { 'X-GitHub-OTP' => otp }
+    #        end
 
     APICache.store = Moneta.new(:File, dir: Dir.tmpdir)
 
     repos = APICache.get("starred", fail: [], timeout: 20, cache: 3600) do
       repos = []
 
-      puts "" # \n
+      puts # \n
       puts "Searching the stars..."
 
       # GET
-      Octokit.starred(Octokit.user.login).concat(Octokit.repos(Octokit.user.login)).each do |repo|
+      client.starred.concat(client.repos).each do |repo|
         repos << [
          repo.name || '',
          repo.description || '',
@@ -111,6 +143,8 @@ class Galileo
           repo
         end
 
+        Table.new(repos[0..20])
+
         # Add separators
         repos = repos.product([:separator]).flatten(1)[0...-1]
 
@@ -121,7 +155,7 @@ class Galileo
         table.style = { width: `/usr/bin/env tput cols`.to_i }
 
         # Print the table
-        puts "\n#{table}\n\n"
+        # puts "\n#{table}\n\n"
       else
         puts "\nNo results for that query.\n\n"
       end
