@@ -116,7 +116,7 @@ class Galileo
 
         # Construct the table
         table = Terminal::Table.new
-        table.headings = ['Name', 'Description', 'Language', 'Author', 'Stars', 'Last Updated', 'Link (⌘  + Click)']
+        table.headings = ['Name', 'Description', 'Language', 'Author', 'Stars', 'Last Updated', ENV['_system_name'] == 'OSX' ? 'Link (⌘  + Click)' : 'Link']
         table.rows = repos[0..20]
         table.style = { width: `/usr/bin/env tput cols`.to_i }
 
