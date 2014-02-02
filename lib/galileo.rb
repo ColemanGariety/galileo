@@ -90,7 +90,7 @@ class Galileo
 
           # Language color-coating
           case repo[2]
-          when 'Clojur'                         then repo[2] = repo[2].colorize(:light_red)
+          when 'Clojure'                         then repo[2] = repo[2].colorize(:light_red)
           when 'Ruby'                           then repo[2] = repo[2].red
           when 'CSS', 'CoffeeScript', 'Python'  then repo[2] = repo[2].blue
           when 'Perl', 'Shell', 'Objective-C'   then repo[2] = repo[2].colorize(:light_blue)
