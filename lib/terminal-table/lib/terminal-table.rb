@@ -1,3 +1,4 @@
+# encoding: utf-8
 # require "terminal-table/cell"
 # require "terminal-table/core_ext"
 # require "terminal-table/row"

@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 class String
   def align position, length
     self.__send__ position, length

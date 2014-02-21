@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require "galileo/version"
 require "octokit"
 require "terminal-table/lib/terminal-table.rb"
@@ -114,7 +116,6 @@ class Galileo
         # Add separators
         repos = repos.product([:separator]).flatten(1)[0...-1]
 
-        # Construct the table
         table = Terminal::Table.new
         table.headings = ['Name', 'Description', 'Language', 'Author', 'Stars', 'Last Updated', ENV['_system_name'] == 'OSX' ? 'Link (⌘  + Click)' : 'Link']
         table.rows = repos[0..20]
