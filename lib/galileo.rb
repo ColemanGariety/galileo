@@ -1,5 +1,6 @@
 # encoding: utf-8
 
+require "galileo/help"
 require "galileo/version"
 require "octokit"
 require "terminal-table/lib/terminal-table.rb"
@@ -15,7 +16,7 @@ class Galileo
   def initialize(query)
     repos = []
     config = Netrc.read
-    
+
     unless config["api.github.com"]
       puts "" # \n
       login = [(print 'GitHub Username: '), STDIN.gets.rstrip][1]
@@ -64,7 +65,7 @@ class Galileo
 
         # Filter by the query
         repos.select! do |repo|
-          
+
 
           # Join the arguments into a query
           q = query.join(' ').downcase
@@ -78,7 +79,7 @@ class Galileo
         # If languages
         if languages.any?
           languages.map!(&:downcase)
-          
+
           repos.select! do |repo|
             languages.include? repo[2].downcase
           end
@@ -128,11 +129,16 @@ class Galileo
       end
     else
       puts "\nNo results found. Have you starred any repos? Have you exceeded your rate limit?\n\n"
-    end    
+    end
   end
 
   def self.refresh
     FileUtils.rm_rf(Dir.tmpdir)
     self.new([])
   end
+
+  def self.help
+    self::HELP
+  end
+
 end

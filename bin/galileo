@@ -3,8 +3,11 @@
 
 require "galileo"
 
-if ARGV[0] == '-r' and ARGV.length == 1
-  Galileo.refresh
-else
-  Galileo.new(ARGV)
+case ARGV[0]
+  when '-r'
+    Galileo.refresh
+  when '-h'
+    puts Galileo.help
+  else
+    Galileo.new(ARGV)
 end
